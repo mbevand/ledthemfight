@@ -58,7 +58,7 @@ def fto8b(color, ɣ=2.8):
     # clamped with highest=128 then (1.0, 0.5, 0) is converted to (128, 64, 0).
     # However by default a gamma-correction ɣ=2.8 is applied, so this example
     # would actually convert to (37, 5, 0).
-    # Notice that "highest" is a soft-clampling, as effect modules can still pass
+    # Notice that "highest" is a soft-clamping, as effect modules can still pass
     # floating-point values greater than 1.0 if they intentionally want to render
     # pixels brighter than "highest".
     return [gamma(min(255, round(x * highest)), ɣ) for x in color]
