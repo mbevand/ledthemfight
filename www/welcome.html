@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+    <title>Welcome - LED Them Fight</title>
+    <link rel="stylesheet" href="main.css" />
+</head>
+<body>
+    <div>
+	<h1>Welcome to LED Them Fight !</h1>
+	<p>
+	Congratulations, the application was installed successfully !
+	Now, let's configure it. Please answer a few questions:
+	</p>
+
+	<form method="post" action="/initial_setup">
+
+	<p>Choose a name for this instance of LED Them Fight:<br>
+	<input required type=text name=name value="My LEDs">
+	</p>
+
+	<p>How many LED strings are connected to the Raspberry Pi:<br>
+	<input required type=number name=nr_led_strings value="1">
+	</p>
+
+	<p>How many pixels are in the string:<br>
+	<input required type=number name=num_pixels value="1">
+	</p>
+
+	<p>The string is inverted, eg. pixels 0-N should be mapped to N-0:<br>
+	<input type=checkbox name=inverted value=1>
+	</p>
+
+	<input type=submit>
+
+	</form>
+
+    </div>
+</body>
+</html>

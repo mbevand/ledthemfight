@@ -1,0 +1,51 @@
+/* correct odd monospace sizing in many browsers */
+code, kbd, pre, samp {
+    font-family: monospace, monospace;
+    font-size: 1em;
+}
+html {
+    font-family: sans-serif;
+}
+body {
+    color: #fff;
+    background: #000;
+    word-wrap: break-word;
+}
+body > div {
+    max-width: 55em;
+    margin-left: auto;
+    margin-right: auto;
+}
+.center {
+    text-align: center;
+}
+.buttons {
+    margin-bottom: 1em;
+}
+.buttons > button {
+    padding: .5em;
+}
+.buttons > button:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+label {
+    display: block;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid grey;
+    border-radius: .2em;
+    margin-top: .1em;
+    padding-top: .3em;
+    padding-bottom: .3em;
+}
+label:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+canvas {
+    border: 1px solid #444;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    width: 180px; /* a multiple of worker_led.py:regenerate():num_pixels (60) is preferrable */
+    height: 10px;
+    margin-left: .3em;
+    margin-right: .3em;
+}
