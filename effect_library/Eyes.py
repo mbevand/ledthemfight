@@ -1,11 +1,12 @@
 import random
 
-eyes = ['oo__oo', # eyes opened
-        '_o__o_'] # eyes closed
+nose = '_' * int(num_pixels / 80)
+eyes = ['oo_' + nose + '_oo', # eyes opened
+        '_o_' + nose + '_o_'] # eyes closed
 pos = None                              # position of the eyes
 age = 0         # age of eyes (in nr. of frames since creation)
 life = 250      # duration (in nr. of frames) that the eyes are lit up
-closedperiod = range(130,140)
+closedperiod = range(130,135)
 fade = 50       # duration (in nr. of frames) of the fade-in and fade-out
 
 def before_frame(frame):
