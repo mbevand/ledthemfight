@@ -31,9 +31,9 @@ colors = {
         'gray': (.5, .5, .5),
         'grey': (.5, .5, .5),
         'purple': (.5, 0, .5),
-        'purple_halloween': (.25, 0, .5),
+        'purple_halloween': (.61, 0, .78),
         'orange': (1, .65, 0),
-        'orange_halloween': (1, .19, 0),
+        'orange_halloween': (1, .55, 0),
         }
 
 def log(m):
