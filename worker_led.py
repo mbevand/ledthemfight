@@ -12,7 +12,7 @@ proc_name = None
 pkg_name = 'effect_library'
 pkg_path = os.path.dirname(__file__) + '/' + pkg_name
 seq_path = os.path.dirname(__file__) + '/www/sequence'
-highest = 25
+highest = 128
 # strings must be a global as it's accessed by graceful_exit()
 strings = []
 _gamma = {}
