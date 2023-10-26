@@ -23,11 +23,6 @@ function button(e) {
 }
 
 function effect(e) {
-    // When clicking a <label> containing an <input>, it fires two events,
-    // one for the label which as an id and one for the input which doesn't.
-    // We ignore the second one
-    if (!e.target.id)
-	return ;
     post("/effect", { id: e.target.id });
 }
 
@@ -70,16 +65,16 @@ get('/get/effects', function() {
     resp = JSON.parse(this.responseText);
     const s = '' +
 	resp['effects'].map((fx) =>
-	    '<label id="' + fx + '">' +
-	    '<input type="radio" name="g1" />' +
+	    '<label>' +
+	    '<input type="radio" name="g1" id="' + fx + '"/>' +
             '<canvas id="can_' + fx + '"></canvas>' +
             fx +
 	    '</label>\n').join('');
     $("#effects").html(s);
-    $("#effects > label").on("click", effect);
+    $("#effects input").on("click", effect);
     initCanvas();
     // render at 60 fps to match the fps we aim at on the physical LED string
     setInterval(drawCanvas, 1000 / 60);
 });
-$("#pseudo_effects > label").on("click", button);
+$("#pseudo_effects input").on("click", button);
 $("button").on("click", button);
