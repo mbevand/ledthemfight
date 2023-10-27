@@ -52,15 +52,15 @@ def gamma(x, ɣ):
                 [round(255 * (x / 255) ** ɣ) for x in range(256)])
     return _gamma[ɣ][x]
 
-def fto8b(color, ɣ=2.8):
+def fto8b(color, ɣ=2.2):
     # Convert floating-point RGB colors to 0-255 values. Floating-point input
     # components are relative to "highest". For example if the brightness is
     # clamped with highest=128 then (1.0, 0.5, 0) is converted to (128, 64, 0).
-    # However by default a gamma-correction ɣ=2.8 is applied, so this example
-    # would actually convert to (37, 5, 0).
+    # However by default a gamma-correction ɣ=2.2 is applied, so this example
+    # would actually convert to (56, 12, 0).
     # Notice that "highest" is a soft-clamping, as effect modules can still pass
-    # floating-point values greater than 1.0 if they intentionally want to render
-    # pixels brighter than "highest".
+    # floating-point values greater than 1.0 if they intentionally want to
+    # render pixels brighter than "highest".
     return [gamma(min(255, round(x * highest)), ɣ) for x in color]
 
 def solid(strip, color):
