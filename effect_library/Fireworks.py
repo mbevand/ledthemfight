@@ -27,7 +27,7 @@ class Firework:
                 pos = self.position
                 speed = (random.random() - .5) * self.part_max_speed
                 life = random.random() * 100 + 30 # frames of life
-                pcol = random.choice((orange_halloween, purple_halloween))
+                pcol = random.choice((orange_halloween, purple))
                 return (pos, speed, life, pcol)
             self.particles = [p() for i in range(round(num_pixels / 7))]
         else:

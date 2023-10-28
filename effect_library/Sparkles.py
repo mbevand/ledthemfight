@@ -1,7 +1,7 @@
 import random
 
 state = {}
-cols = (purple_halloween, orange_halloween)
+cols = (purple, orange_halloween)
 
 def render(index, frame):
     #index = (index + int(frame / 3)) % num_pixels
