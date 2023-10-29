@@ -13,7 +13,7 @@ def conf_save():
     dat = json.dumps(conf, indent=2)
     open(conf_file, 'w').write(dat)
 
-def update_worker_conf():
+def conf_push():
     to_led_driver.put(['/initial_setup', conf])
 
 class MyHandler(SimpleHTTPRequestHandler):
@@ -89,7 +89,7 @@ class MyHandler(SimpleHTTPRequestHandler):
                 'inverted': 'inverted' in form,
                 })
             conf_save()
-            update_worker_conf()
+            conf_push()
             self.send_response(303)
             self.send_header('Location', '/')
             self.end_headers()
@@ -103,9 +103,9 @@ class MyHandler(SimpleHTTPRequestHandler):
             self.send_response(200)
             self.end_headers()
 
-def worker_process(to_led_driver, to_web_server):
+def led_driver_process(to_led_driver, to_web_server):
     import worker_led
-    worker_led.run_forever(to_led_driver, to_web_server)
+    worker_led.drive_led_forever(to_led_driver, to_web_server)
 
 def sequence_generator_process():
     import worker_led
@@ -118,11 +118,11 @@ def main():
     args = parser.parse_args()
     try:
         conf = json.load(open(conf_file))
-        update_worker_conf()
+        conf_push()
     except FileNotFoundError:
         conf = { 'set_up': False }
-    # start worker process
-    Process(target=worker_process, args=(to_led_driver, to_web_server)).start()
+    # start led driver process
+    Process(target=led_driver_process, args=(to_led_driver, to_web_server)).start()
     # start sequence generator
     Process(target=sequence_generator_process, args=()).start()
     # start web server

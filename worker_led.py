@@ -217,7 +217,7 @@ def graceful_exit(signal_number, stack_frame):
         st.stop()
     sys.exit(0)
 
-def run_forever(to_led_driver, to_web_server):
+def drive_led_forever(to_led_driver, to_web_server):
     global proc_name
     proc_name = 'led_driver'
     # handle SIGTERM, the default signal sent by kill(1)
