@@ -12,7 +12,7 @@ proc_name = None
 pkg_name = 'effect_library'
 pkg_path = os.path.dirname(__file__) + '/' + pkg_name
 seq_path = os.path.dirname(__file__) + '/www/sequence'
-highest = 128
+brightness = 128
 # strings must be a global as it's accessed by graceful_exit()
 strings = []
 _gamma = {}
@@ -52,15 +52,14 @@ def gamma(x, ɣ):
     return _gamma[ɣ][x]
 
 def fto8b(color, ɣ=2.2):
-    # Convert floating-point RGB colors to 0-255 values. Floating-point input
-    # components are relative to "highest". For example if the brightness is
-    # clamped with highest=128 then (1.0, 0.5, 0) is converted to (128, 64, 0).
-    # However by default a gamma-correction ɣ=2.2 is applied, so this example
-    # would actually convert to (56, 12, 0).
-    # Notice that "highest" is a soft-clamping, as effect modules can still pass
-    # floating-point values greater than 1.0 if they intentionally want to
-    # render pixels brighter than "highest".
-    return [gamma(min(255, round(x * highest)), ɣ) for x in color]
+    # Convert floating-point RGB colors to 0-255 values. Floating-point values
+    # are relative to "brightness". For example, with brightness=128,
+    # (1.0, 0.5, 0) is converted to (128, 64, 0). However by default a gamma-
+    # correction ɣ=2.2 is applied, so this example actually converts to
+    # (56, 12, 0). Notice this is a soft-clamping, as effect modules can still
+    # pass floating-point values greater than 1.0 if they intentionally want to
+    # render pixels brighter than "brightness".
+    return [gamma(min(255, round(x * brightness)), ɣ) for x in color]
 
 def solid(strip, color):
     for i in range(strip.numPixels()):
@@ -179,7 +178,7 @@ def do_get(to_web_server, strings, arg):
         fxs = [x[:-3] for x in sorted(os.listdir(pkg_path)) if x.endswith('.py')]
         to_web_server.put([arg, {
             'nr_led_strings': len(strings),
-            'brightness': highest,
+            'brightness': brightness,
             'effects' : fxs,
             }])
     else:
@@ -208,9 +207,9 @@ def do_button(strings, q, arg):
         log('stopping effect')
         strings[0].stop()
     elif b_name == 'brightness':
-        global highest
-        highest = int(b_val)
-        log(f'setting brightness to {highest}')
+        global brightness
+        brightness = int(b_val)
+        log(f'setting brightness to {brightness}')
 
 def graceful_exit(signal_number, stack_frame):
     for st in strings:
@@ -287,12 +286,11 @@ def regenerate(mod_name):
             ''.join(traceback.format_exception(*sys.exc_info())))
 
 def seqgen_forever():
-    global highest, proc_name
+    global brightness, proc_name
     proc_name = 'watcher'
-    # We cap the max component value a bit below 0xff so that effects that
-    # sparkle above <highest> (eg. the stars in Flag_US) can still be barely
-    # visible
-    highest = 0xe0
+    # We set brightness to a bit below 0xff so that effects that sparkle even
+    # brighter (eg. the stars in Flag_US) can still be barely visible
+    brightness = 0xe0
     while True:
         for fname in os.listdir(pkg_path):
             noext, ext = os.path.splitext(fname)
