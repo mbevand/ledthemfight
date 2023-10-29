@@ -163,7 +163,7 @@ def render_one_frame(strings):
         st.ps.show()
         st.frame += 1
 
-def check_edits(strings, q):
+def check_edits(strings, to_led_driver):
     now = time.time()
     for st in strings:
         if st.effect and abs(now - st.last_stat) > .5:
@@ -171,7 +171,8 @@ def check_edits(strings, q):
             new_mtime = fx_getmtime(st.effect)
             if new_mtime != st.fx_mtime:
                 log(f'module file for effect "{st.effect}" changed, reloading')
-                q.put(['/button', ('effect', st.effect)])
+                # led driver process sends a msg to itself to reload the effect
+                to_led_driver.put(['/button', ('effect', st.effect)])
 
 def do_get(to_web_server, strings, arg):
     if arg == '/state':
@@ -190,7 +191,7 @@ def do_initial_setup(strings, conf):
     strings.clear()
     strings.append(PixelString(conf["num_pixels"], 18, conf["inverted"]))
 
-def do_effect(strings, q, effect):
+def do_effect(strings, effect):
     mtime = fx_getmtime(effect)
     log(f'loading effect {pkg_path}/{effect}.py')
     mod = fx_load(strings[0].num_pixels, effect)
@@ -199,10 +200,10 @@ def do_effect(strings, q, effect):
     log(f'showing effect {effect}')
     strings[0].start(effect, mtime, mod)
 
-def do_button(strings, q, arg):
+def do_button(strings, arg):
     b_name, b_val = arg
     if b_name == 'effect':
-        do_effect(strings, q, b_val)
+        do_effect(strings, b_val)
     elif b_name == 'stop':
         log('stopping effect')
         strings[0].stop()
@@ -216,7 +217,7 @@ def graceful_exit(signal_number, stack_frame):
         st.stop()
     sys.exit(0)
 
-def run_forever(q, to_web_server):
+def run_forever(to_led_driver, to_web_server):
     global proc_name
     proc_name = 'led_driver'
     # handle SIGTERM, the default signal sent by kill(1)
@@ -224,19 +225,19 @@ def run_forever(q, to_web_server):
     while True:
         try:
             is_rendering = len(strings) and strings[0].effect
-            if not is_rendering or (is_rendering and not q.empty()):
-                action, arg = q.get()
+            if not is_rendering or (is_rendering and not to_led_driver.empty()):
+                action, arg = to_led_driver.get()
                 if action == '/get':
                     do_get(to_web_server, strings, arg)
                 elif action == '/initial_setup':
                     do_initial_setup(strings, arg)
                 elif action == '/button':
-                    do_button(strings, q, arg)
+                    do_button(strings, arg)
                 else:
                     raise Exception(f'unknown action {action}')
                 continue
             render_one_frame(strings)
-            check_edits(strings, q)
+            check_edits(strings, to_led_driver)
         except KeyboardInterrupt:
             # handle Ctrl-C
             graceful_exit(None, None)

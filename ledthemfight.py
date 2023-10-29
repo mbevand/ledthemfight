@@ -6,7 +6,7 @@ from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 conf_file = '/etc/ledthemfight.conf'
 conf = None
-worker_q = Queue()
+to_led_driver = Queue()
 to_web_server = Queue()
 
 def conf_save():
@@ -14,7 +14,7 @@ def conf_save():
     open(conf_file, 'w').write(dat)
 
 def update_worker_conf():
-    worker_q.put(['/initial_setup', conf])
+    to_led_driver.put(['/initial_setup', conf])
 
 class MyHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
@@ -44,7 +44,7 @@ class MyHandler(SimpleHTTPRequestHandler):
         self.wfile.write(data.encode())
 
     def get_data(self, data):
-        worker_q.put(['/get', data])
+        to_led_driver.put(['/get', data])
         key, val = to_web_server.get()
         if key == '/state':
             resp = val
@@ -99,13 +99,13 @@ class MyHandler(SimpleHTTPRequestHandler):
             self.send_error(404)
         else:
             j = self.parse_json()
-            worker_q.put([self.path, (j['name'], j['value'])])
+            to_led_driver.put([self.path, (j['name'], j['value'])])
             self.send_response(200)
             self.end_headers()
 
-def worker_process(to_q, to_web_server):
+def worker_process(to_led_driver, to_web_server):
     import worker_led
-    worker_led.run_forever(to_q, to_web_server)
+    worker_led.run_forever(to_led_driver, to_web_server)
 
 def sequence_generator_process():
     import worker_led
@@ -122,7 +122,7 @@ def main():
     except FileNotFoundError:
         conf = { 'set_up': False }
     # start worker process
-    Process(target=worker_process, args=(worker_q, to_web_server)).start()
+    Process(target=worker_process, args=(to_led_driver, to_web_server)).start()
     # start sequence generator
     Process(target=sequence_generator_process, args=()).start()
     # start web server
