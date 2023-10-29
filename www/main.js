@@ -19,11 +19,11 @@ function post(url, data_to_send) {
 }
 
 function button(e) {
-    post("/button", { id: e.target.id });
+    post("/button", { name: e.target.id, value: e.target.value });
 }
 
 function effect(e) {
-    post("/effect", { id: e.target.id });
+    post("/button", { name: 'effect', value: e.target.id });
 }
 
 function drawCanvasOne(index, canvas) {
@@ -61,8 +61,9 @@ function initCanvas() {
     $("canvas").each(initCanvasOne);
 }
 
-get('/get/effects', function() {
+get('/get/state', function() {
     resp = JSON.parse(this.responseText);
+    $("#brightness").val(resp["brightness"]);
     const s = '' +
 	resp['effects'].map((fx) =>
 	    '<label>' +
@@ -76,5 +77,5 @@ get('/get/effects', function() {
     // render at 60 fps to match the fps we aim at on the physical LED string
     setInterval(drawCanvas, 1000 / 60);
 });
+$("#brightness").on("change", button);
 $("#pseudo_effects input").on("click", button);
-$("button").on("click", button);

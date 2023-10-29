@@ -19,14 +19,11 @@ body > div {
 .center {
     text-align: center;
 }
-.buttons {
+.controls {
     margin-bottom: 1em;
 }
-.buttons > button {
-    padding: .5em;
-}
-.buttons > button:hover {
-    background-color: rgba(255, 255, 255, 0.5);
+.controls * {
+    height: 25px;
 }
 label {
     display: block;

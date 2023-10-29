@@ -172,7 +172,18 @@ def check_edits(strings, q):
             new_mtime = fx_getmtime(st.effect)
             if new_mtime != st.fx_mtime:
                 log(f'module file for effect "{st.effect}" changed, reloading')
-                q.put(['/effect', st.effect])
+                q.put(['/button', ('effect', st.effect)])
+
+def do_get(to_web_server, strings, arg):
+    if arg == '/state':
+        fxs = [x[:-3] for x in sorted(os.listdir(pkg_path)) if x.endswith('.py')]
+        to_web_server.put([arg, {
+            'nr_led_strings': len(strings),
+            'brightness': highest,
+            'effects' : fxs,
+            }])
+    else:
+        to_web_server.put(['error', f'invalid request: /get{arg}'])
 
 def do_initial_setup(strings, conf):
     log(f'configuring {conf["nr_led_strings"]} led string(s)'
@@ -189,25 +200,24 @@ def do_effect(strings, q, effect):
     log(f'showing effect {effect}')
     strings[0].start(effect, mtime, mod)
 
-def do_button(strings, name):
-    global highest
-    mult = 255**(1 / 10)
-    if name == 'stop':
+def do_button(strings, q, arg):
+    b_name, b_val = arg
+    if b_name == 'effect':
+        do_effect(strings, q, b_val)
+    elif b_name == 'stop':
         log('stopping effect')
         strings[0].stop()
-    elif name == 'dimmer':
-        highest = round(highest / mult)
-        log(f'clamping colors to {highest}')
-    elif name == 'brighter':
-        highest = round(min(255, mult * highest)) if highest else 1
-        log(f'clamping colors to {highest}')
+    elif b_name == 'brightness':
+        global highest
+        highest = int(b_val)
+        log(f'setting brightness to {highest}')
 
 def graceful_exit(signal_number, stack_frame):
     for st in strings:
         st.stop()
     sys.exit(0)
 
-def run_forever(q):
+def run_forever(q, to_web_server):
     global proc_name
     proc_name = 'led_driver'
     # handle SIGTERM, the default signal sent by kill(1)
@@ -217,12 +227,12 @@ def run_forever(q):
             is_rendering = len(strings) and strings[0].effect
             if not is_rendering or (is_rendering and not q.empty()):
                 action, arg = q.get()
-                if action == '/initial_setup':
+                if action == '/get':
+                    do_get(to_web_server, strings, arg)
+                elif action == '/initial_setup':
                     do_initial_setup(strings, arg)
-                elif action == '/effect':
-                    do_effect(strings, q, arg)
                 elif action == '/button':
-                    do_button(strings, arg)
+                    do_button(strings, q, arg)
                 else:
                     raise Exception(f'unknown action {action}')
                 continue

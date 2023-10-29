@@ -7,6 +7,7 @@ from http.server import HTTPServer, SimpleHTTPRequestHandler
 conf_file = '/etc/ledthemfight.conf'
 conf = None
 worker_q = Queue()
+to_web_server = Queue()
 
 def conf_save():
     dat = json.dumps(conf, indent=2)
@@ -42,13 +43,14 @@ class MyHandler(SimpleHTTPRequestHandler):
     def write_data(self, data):
         self.wfile.write(data.encode())
 
-    def get_data(self, path):
-        if path == '/get/effects':
-            dname = os.path.dirname(__file__) + '/effect_library'
-            resp = { 'effects' :
-            [x[:-3] for x in sorted(os.listdir(dname)) if x.endswith('.py')] }
+    def get_data(self, data):
+        worker_q.put(['/get', data])
+        key, val = to_web_server.get()
+        if key == '/state':
+            resp = val
         else:
-            return self.send_error(404)
+            self.send_error(500, f'{key}: {val}')
+            return
         self.send_response(200)
         self.end_headers()
         self.write_data(json.dumps(resp) + '\n')
@@ -62,10 +64,11 @@ class MyHandler(SimpleHTTPRequestHandler):
                 return
             self.path = '/index.html'
         if self.path.startswith('/get/'):
-            return self.get_data(self.path)
+            return self.get_data(self.path[4:])
         # whitelist of URL paths
         if not self.path.startswith('/sequence/') and \
            self.path not in (
+                '/brightness.svg',
                 '/cash.js',
                 '/index.html',
                 '/main.css',
@@ -92,17 +95,17 @@ class MyHandler(SimpleHTTPRequestHandler):
             self.end_headers()
         elif not conf['set_up']:
             self.send_error(500, 'Server is not set up')
-        elif self.path not in ('/button', '/effect'):
+        elif self.path not in ('/button',):
             self.send_error(404)
         else:
             j = self.parse_json()
-            worker_q.put([self.path, j['id']])
+            worker_q.put([self.path, (j['name'], j['value'])])
             self.send_response(200)
             self.end_headers()
 
-def worker_process(q):
+def worker_process(to_q, to_web_server):
     import worker_led
-    worker_led.run_forever(q)
+    worker_led.run_forever(to_q, to_web_server)
 
 def sequence_generator_process():
     import worker_led
@@ -119,7 +122,7 @@ def main():
     except FileNotFoundError:
         conf = { 'set_up': False }
     # start worker process
-    Process(target=worker_process, args=(worker_q,)).start()
+    Process(target=worker_process, args=(worker_q, to_web_server)).start()
     # start sequence generator
     Process(target=sequence_generator_process, args=()).start()
     # start web server
