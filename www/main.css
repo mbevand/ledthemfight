@@ -16,14 +16,12 @@ body > div {
     margin-left: auto;
     margin-right: auto;
 }
-.center {
-    text-align: center;
-}
 .controls {
     margin-bottom: 1em;
 }
-.controls * {
+.controls img {
     height: 25px;
+    margin-bottom: -5px;
 }
 label {
     display: block;

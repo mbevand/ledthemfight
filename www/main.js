@@ -61,6 +61,13 @@ function initCanvas() {
     $("canvas").each(initCanvasOne);
 }
 
+function status_update() {
+    get('/get/state', function() {
+	resp = JSON.parse(this.responseText);
+	$('#status').html(resp['fps'] ? (resp['fps'].toFixed(1) + ' fps') : '');
+    });
+}
+
 get('/get/state', function() {
     resp = JSON.parse(this.responseText);
     $("#brightness").val(resp["brightness"]);
@@ -79,3 +86,4 @@ get('/get/state', function() {
 });
 $("#brightness").on("input", button);
 $("#pseudo_effects input").on("click", button);
+setInterval(status_update, 500);
