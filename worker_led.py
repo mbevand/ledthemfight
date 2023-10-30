@@ -292,15 +292,19 @@ def seqgen_forever():
     # brighter (eg. the stars in Flag_US) can still be barely visible
     brightness = 0xe0
     while True:
-        for fname in os.listdir(pkg_path):
-            noext, ext = os.path.splitext(fname)
-            if ext != '.py':
-                continue
-            mtime_source = os.path.getmtime(pkg_path + '/' + fname)
-            try:
-                mtime_bin = os.path.getmtime(seq_path + '/' + noext + '.bin')
-            except FileNotFoundError:
-                mtime_bin = 0
-            if mtime_source > mtime_bin:
-                regenerate(noext)
-        time.sleep(1)
+        try:
+            for fname in os.listdir(pkg_path):
+                noext, ext = os.path.splitext(fname)
+                if ext != '.py':
+                    continue
+                mtime_source = os.path.getmtime(pkg_path + '/' + fname)
+                try:
+                    mtime_bin = os.path.getmtime(seq_path + '/' + noext + '.bin')
+                except FileNotFoundError:
+                    mtime_bin = 0
+                if mtime_source > mtime_bin:
+                    regenerate(noext)
+            time.sleep(1)
+        except KeyboardInterrupt:
+            # handle Ctrl-C
+            sys.exit(0)
