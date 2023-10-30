@@ -43,24 +43,33 @@ $ sudo ./ledthemfight.py  # add "-p 1234" to listen on a port other than 80/tcp
 
 # API
 
-The HTTP API implemented for the web interface can just as easily be invoked from the
-command line or by third-party tools. For example, get the list of effect names:
+The HTTP API, used by the web interface, can easily be invoked from the
+command line or by third-party tools. For example, get the current state of
+the server, which includes the list of all implemented effect names:
 
 ```
-$ curl http://HOST/get/effects
-{"effects": ["Solid", "Breathe", ...]}
+$ curl http://HOST/get/state
+{
+  "nr_led_strings": 1,
+  "brightness": 255,
+  "effects": [ "Blink", "Breathe", "Color_Wipe", ... ]
+}
 ```
 
 Start an effect:
 
 ```
-$ curl http://HOST/effect --json '{"id":"Solid"}'
+$ curl http://HOST/button --json '{"name":"effect","value":"Sparkles"}'
 ```
 
-Stop the current effect, or make the LED string brighter or dimmer:
+Stop the current effect:
 
 ```
-$ curl http://HOST/button --json '{"id":"stop"}'
-$ curl http://HOST/button --json '{"id":"brighter"}'
-$ curl http://HOST/button --json '{"id":"dimmer"}'
+$ curl http://HOST/button --json '{"name":"stop"}'
+```
+
+Change the brightness level (1-255):
+
+```
+$ curl http://HOST/button --json '{"name":"brightness","value":"255"}'
 ```
