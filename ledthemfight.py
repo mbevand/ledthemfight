@@ -99,7 +99,7 @@ class MyHandler(SimpleHTTPRequestHandler):
             self.send_error(404)
         else:
             j = self.parse_json()
-            to_led_driver.put([self.path, (j['name'], j['value'])])
+            to_led_driver.put([self.path, (j['name'], j.get('value'))])
             self.send_response(200)
             self.end_headers()
 
