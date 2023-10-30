@@ -3,4 +3,4 @@ def render(index, frame):
     colors = [purple] * n + [black] * 2 \
            + [orange_halloween] * n + [black] * 2 \
            ;
-    return colors[(index + int(-frame / 4)) % len(colors)]
+    return colors[(index + int(-frame / 5)) % len(colors)]
