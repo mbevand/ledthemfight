@@ -8,6 +8,7 @@ LED_INVERT = False    # True to invert the output signal (useful when using
 LED_BRIGHTNESS = 255  # Set to 0 for darkest and 255 for brightest
 LED_CHANNEL = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
 
+fps_goal = 60 # aim at rendering at this fps rate
 proc_name = None
 pkg_name = 'effect_library'
 pkg_path = os.path.dirname(__file__) + '/' + pkg_name
@@ -186,7 +187,7 @@ def do_get(to_web_server, strings, arg):
             'nr_led_strings': len(strings),
             'brightness': brightness,
             'effects': fxs,
-            'fps': (ftimes[0] - ftimes[-1]) / lf if lf else 0,
+            'fps': lf / (ftimes[0] - ftimes[-1]) if lf > 1 else 0,
             }])
     else:
         to_web_server.put(['error', f'invalid request: /get{arg}'])
@@ -213,9 +214,15 @@ def do_button(strings, arg):
     elif b_name == 'stop':
         log('stopping effect')
         strings[0].stop()
+        ftimes.clear()
     elif b_name == 'brightness':
         global brightness
         brightness = max(1, min(255, int(b_val)))
+
+def wait_next_frame():
+    s = ftimes[0] + 1 / fps_goal - time.time()
+    if s > 50e-6: # don't bother to sleep for less than 50 µsec
+        time.sleep(s)
 
 def graceful_exit(signal_number, stack_frame):
     for st in strings:
@@ -249,7 +256,7 @@ def drive_led_forever(to_led_driver, to_web_server):
         except Exception:
             err(f'exception:\n' +
                 ''.join(traceback.format_exception(*sys.exc_info())))
-        time.sleep(1 / 80)
+        wait_next_frame()
 
 #
 # Sequence generator
