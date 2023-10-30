@@ -187,6 +187,7 @@ def do_get(to_web_server, strings, arg):
             'nr_led_strings': len(strings),
             'brightness': brightness,
             'effects': fxs,
+            'rendering': [st.effect for st in strings],
             'fps': lf / (ftimes[0] - ftimes[-1]) if lf > 1 else 0,
             }])
     else:
