@@ -79,6 +79,8 @@ get('/get/state', function() {
             fx +
 	    '</label>\n').join('');
     $("#effects").html(s);
+    sel = (resp['rendering'][0] == undefined) ? "#stop" : ("#" + resp['rendering'][0]);
+    $(sel).prop("checked", true);
     $("#effects input").on("click", effect);
     initCanvas();
     // render at 60 fps to match the fps we aim at on the physical LED string
