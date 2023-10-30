@@ -27,9 +27,7 @@ label {
     display: block;
     cursor: pointer;
     background-color: rgba(255, 255, 255, 0.1);
-    border: 1px solid grey;
-    border-radius: .2em;
-    margin-top: .1em;
+    margin-top: 3px;
     padding-top: .3em;
     padding-bottom: .3em;
 }
