@@ -209,7 +209,7 @@ def do_button(strings, arg):
         strings[0].stop()
     elif b_name == 'brightness':
         global brightness
-        brightness = int(b_val)
+        brightness = max(1, min(255, int(b_val)))
         log(f'setting brightness to {brightness}')
 
 def graceful_exit(signal_number, stack_frame):
