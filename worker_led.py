@@ -80,12 +80,16 @@ def hsv(h, s, v):
 def dim(color, f=2):
     return tuple([x / f for x in color])
 
+def mul(color, f):
+    return tuple([x * f for x in color])
+
 def enrich_namespace(num_pixels, mod):
     # put some variables and functions in the module's namespace
     mod.num_pixels = num_pixels
     mod.rgb = rgb
     mod.hsv = hsv
     mod.dim = dim
+    mod.mul = mul
     for (k, v) in colors.items():
         setattr(mod, k, v)
 
