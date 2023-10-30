@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import argparse, os, json, urllib.parse
+import argparse, sys, os, json, urllib.parse, signal
 from multiprocessing import Process, Queue
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
@@ -111,6 +111,11 @@ def sequence_generator_process():
     import worker_led
     worker_led.seqgen_forever()
 
+def main_exit(signal_number, stack_frame):
+    # Calling sys.exit() allows the process to terminate the daemon=True
+    # child processes gracefully
+    sys.exit(0)
+
 def main():
     global conf
     parser = argparse.ArgumentParser()
@@ -121,10 +126,11 @@ def main():
         conf_push()
     except FileNotFoundError:
         conf = { 'set_up': False }
-    # start led driver process
-    Process(target=led_driver_process, args=(to_led_driver, to_web_server)).start()
-    # start sequence generator
-    Process(target=sequence_generator_process, args=()).start()
+    signal.signal(signal.SIGTERM, main_exit)
+    Process(target=led_driver_process, daemon=True,
+            name="led_driver", args=(to_led_driver, to_web_server)).start()
+    Process(target=sequence_generator_process, daemon=True,
+            name="sequence_generator", args=()).start()
     # start web server
     HTTPServer.allow_reuse_address = True
     httpd = HTTPServer(('', args.port), MyHandler)
