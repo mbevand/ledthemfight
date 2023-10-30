@@ -23,7 +23,7 @@ function button(e) {
 }
 
 function effect(e) {
-    post("/button", { name: 'effect', value: e.target.id });
+    post("/button", { name: "effect", value: e.target.id });
 }
 
 function drawCanvasOne(index, canvas) {
@@ -52,7 +52,7 @@ function initCanvasOne(index, canvas) {
     canvas.width = n_pixels;
     canvas.height = 1;
     name = canvas.id.substr(4);
-    get('/sequence/' + name + '.bin', function() {
+    get("/sequence/" + name + ".bin", function() {
         sequences[canvas.id] = { seq: new Uint8Array(this.response), frame: 0 };
     }, true);
 }
@@ -62,24 +62,24 @@ function initCanvas() {
 }
 
 function status_update() {
-    get('/get/state', function() {
+    get("/get/state", function() {
 	resp = JSON.parse(this.responseText);
-	$('#status').html(resp['fps'] ? (resp['fps'].toFixed(1) + ' fps') : '');
+	$("#status").html(resp["fps"] ? (resp["fps"].toFixed(1) + " fps") : "");
     });
 }
 
-get('/get/state', function() {
+get("/get/state", function() {
     resp = JSON.parse(this.responseText);
     $("#brightness").val(resp["brightness"]);
-    const s = '' +
-	resp['effects'].map((fx) =>
-	    '<label>' +
-	    '<input type="radio" name="g1" id="' + fx + '"/>' +
-            '<canvas id="can_' + fx + '"></canvas>' +
+    const s = "" +
+	resp["effects"].map((fx) =>
+	    "<label>" +
+	    "<input type='radio' name='g1' id='" + fx + "'/>" +
+            "<canvas id='can_" + fx + "'></canvas>" +
             fx +
-	    '</label>\n').join('');
+	    "</label>\n").join("");
     $("#effects").html(s);
-    sel = (resp['rendering'][0] == undefined) ? "#stop" : ("#" + resp['rendering'][0]);
+    sel = (resp["rendering"][0] == undefined) ? "#stop" : ("#" + resp["rendering"][0]);
     $(sel).prop("checked", true);
     $("#effects input").on("click", effect);
     initCanvas();
