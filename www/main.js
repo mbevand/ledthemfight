@@ -64,7 +64,7 @@ function initCanvas() {
 function status_update() {
     get("/get/state", function() {
 	resp = JSON.parse(this.responseText);
-	$("#status").html(resp["fps"] ? (resp["fps"].toFixed(1) + " fps") : "");
+	$("#status").html(resp["fps"] ? ("fps: " + resp["fps"].toFixed(1)) : "");
     });
 }
 
