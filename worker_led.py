@@ -15,6 +15,7 @@ seq_path = os.path.dirname(__file__) + '/www/sequence'
 brightness = 128
 # strings must be a global as it's accessed by graceful_exit()
 strings = []
+ftimes = []
 _gamma = {}
 colors = {
         'black': (0, 0, 0),
@@ -152,6 +153,9 @@ class PixelString:
             self.relay.off()
 
 def render_one_frame(strings):
+    ftimes.insert(0, time.time())
+    if len(ftimes) > 30:
+        ftimes.pop()
     for st in strings:
         if hasattr(st.fx_mod, 'before_frame'):
             st.fx_mod.before_frame(st.frame)
@@ -177,10 +181,12 @@ def check_edits(strings, to_led_driver):
 def do_get(to_web_server, strings, arg):
     if arg == '/state':
         fxs = [x[:-3] for x in sorted(os.listdir(pkg_path)) if x.endswith('.py')]
+        lf = len(ftimes)
         to_web_server.put([arg, {
             'nr_led_strings': len(strings),
             'brightness': brightness,
-            'effects' : fxs,
+            'effects': fxs,
+            'fps': (ftimes[0] - ftimes[-1]) / lf if lf else 0,
             }])
     else:
         to_web_server.put(['error', f'invalid request: /get{arg}'])
