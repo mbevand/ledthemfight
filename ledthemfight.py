@@ -128,9 +128,9 @@ def main():
         conf = { 'set_up': False }
     signal.signal(signal.SIGTERM, main_exit)
     Process(target=led_driver_process, daemon=True,
-            name="led_driver", args=(to_led_driver, to_web_server)).start()
+            name='led_driver', args=(to_led_driver, to_web_server)).start()
     Process(target=sequence_generator_process, daemon=True,
-            name="sequence_generator", args=()).start()
+            name='seqgen', args=()).start()
     # start web server
     HTTPServer.allow_reuse_address = True
     httpd = HTTPServer(('', args.port), MyHandler)

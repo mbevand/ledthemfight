@@ -287,7 +287,7 @@ def regenerate(mod_name):
 
 def seqgen_forever():
     global brightness, proc_name
-    proc_name = 'watcher'
+    proc_name = 'seqgen'
     # We set brightness to a bit below 0xff so that effects that sparkle even
     # brighter (eg. the stars in Flag_US) can still be barely visible
     brightness = 0xe0
