@@ -6,7 +6,7 @@ speed = 1 + int((num_pixels - 1) / 60)
 
 def before_frame(frame):
     global color_i
-    if not(frame % num_pixels):
+    if not((frame * speed) % num_pixels):
         color_i += 1
 
 def render(index, frame):
