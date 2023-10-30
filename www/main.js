@@ -77,5 +77,5 @@ get('/get/state', function() {
     // render at 60 fps to match the fps we aim at on the physical LED string
     setInterval(drawCanvas, 1000 / 60);
 });
-$("#brightness").on("change", button);
+$("#brightness").on("input", button);
 $("#pseudo_effects input").on("click", button);
