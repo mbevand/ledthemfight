@@ -4,9 +4,8 @@ state = {}
 cols = (purple, orange_halloween)
 
 def render(index, frame):
-    #index = (index + int(frame / 3)) % num_pixels
     ret = black
-    if random.random() < 1 / num_pixels:
+    if random.random() < 2 / num_pixels:
         state[index] = 1
     if index in state:
         f = state[index]
