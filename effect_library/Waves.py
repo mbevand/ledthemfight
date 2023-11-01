@@ -2,13 +2,21 @@ import math
 
 colors = (blue, yellow)
 segs = max(2, round(num_pixels / 30))
+period = 100 # period of oscillations (in nr. of frames)
 dist = None
 
 def before_frame(frame):
+    def s(x):
+        # the s() function flattens the sine wave to that the oscillation
+        # of waves slows down more significantly before reversing direction;
+        # f=1 does not alter the sine wave, and the closer it is to 0 the
+        # flatter the sine wave is
+        f = .8
+        return x**f if x >= 0 else -abs(x)**f
     global dist
-    dist = (1 + .9 * math.sin(math.pi * frame / 120)) / 2 * num_pixels / segs / 2
+    dist = (1 + .9 * s(math.sin(math.pi * frame / period))) / 2 * \
+        num_pixels / segs / 2
 
 def render(index, frame):
-    a = index % (num_pixels / segs)
-    b = abs(a - num_pixels / segs / 2)
-    return colors[0] if b < dist else colors[1]
+    d = abs(index % (num_pixels / segs) - num_pixels / segs / 2)
+    return colors[0] if d < dist else colors[1]
