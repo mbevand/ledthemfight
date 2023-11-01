@@ -2,10 +2,11 @@ import random
 
 state = {}
 cols = (purple, orange_halloween)
+intensity = 1 + int((num_pixels - 1) / 60)
 
 def render(index, frame):
     ret = black
-    if random.random() < 2 / num_pixels:
+    if random.random() < intensity / num_pixels:
         state[index] = 1
     if index in state:
         f = state[index]
