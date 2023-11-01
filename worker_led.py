@@ -315,14 +315,18 @@ def seqgen_forever():
                 noext, ext = os.path.splitext(fname)
                 if ext != '.py':
                     continue
-                mtime_source = os.path.getmtime(pkg_path + '/' + fname)
+                try:
+                    mtime_source = os.path.getmtime(pkg_path + '/' + fname)
+                except FileNotFoundError:
+                    # The file may have just been deleted right after listdir()
+                    continue
                 try:
                     mtime_bin = os.path.getmtime(seq_path + '/' + noext + '.bin')
                 except FileNotFoundError:
                     mtime_bin = 0
                 if mtime_source > mtime_bin:
                     regenerate(noext)
-            time.sleep(1)
         except KeyboardInterrupt:
             # handle Ctrl-C
             sys.exit(0)
+        time.sleep(1)
