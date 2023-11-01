@@ -47,7 +47,7 @@ def before_frame(frame):
             if j >= 0 and j < num_pixels:
                 numerator = i + 1 if fwork.speed > 0 else fwork.width - i
                 buf[j] = (numerator / fwork.width)**3
-                colors[j] = white
+                colors[j] = orange_halloween if (j % 8 < 4) else purple
     else:
         age = frame - fwork.exploding_frame
         all_dead = True
