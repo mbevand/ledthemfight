@@ -204,13 +204,16 @@ def do_initial_setup(strings, conf):
     strings.append(PixelString(conf["num_pixels"], 18, conf["inverted"]))
 
 def do_effect(strings, effect):
-    mtime = fx_getmtime(effect)
-    log(f'loading effect {pkg_path}/{effect}.py')
-    mod = fx_load(strings[0].num_pixels, effect)
-    if mod == None:
-        return
-    log(f'showing effect {effect}')
-    strings[0].start(effect, mtime, mod)
+    try:
+        mtime = fx_getmtime(effect)
+        log(f'loading effect {pkg_path}/{effect}.py')
+        mod = fx_load(strings[0].num_pixels, effect)
+        if mod == None:
+            return
+        log(f'showing effect {effect}')
+        strings[0].start(effect, mtime, mod)
+    except FileNotFoundError:
+        log(f'no such effect: {effect}')
 
 def do_button(strings, arg):
     b_name, b_val = arg
@@ -225,6 +228,8 @@ def do_button(strings, arg):
         brightness = max(1, min(255, int(b_val)))
 
 def wait_next_frame():
+    if not(len(ftimes)):
+        return
     s = ftimes[0] + 1 / fps_goal - time.time()
     if s > 50e-6: # don't bother to sleep for less than 50 µsec
         time.sleep(s)
