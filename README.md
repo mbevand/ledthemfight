@@ -52,7 +52,9 @@ $ curl http://HOST/get/state
 {
   "nr_led_strings": 1,
   "brightness": 255,
-  "effects": [ "Blink", "Breathe", "Color_Wipe", ... ]
+  "effects": [ "Blink", "Breathe", "Color_Wipe", ... ],
+  "rendering": [ null ],
+  "fps": 0
 }
 ```
 
