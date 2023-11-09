@@ -7,7 +7,7 @@ dist = None
 
 def before_frame(frame):
     def s(x):
-        # the s() function flattens the sine wave to that the oscillation
+        # the s() function flattens the sine wave so that the oscillation
         # of waves slows down more significantly before reversing direction;
         # f=1 does not alter the sine wave, and the closer it is to 0 the
         # flatter the sine wave is
