@@ -2,7 +2,7 @@ import math
 from array import array
 
 buf = None
-colors = ('822d08', 'ec4b07', 'f9f697', 'fcd317', 'f7a72a')
+colors = ('#822d08', '#ec4b07', '#f9f697', '#fcd317', '#f7a72a')
 # distance in pixels of each spot from the center of the string
 dists = [0] * len(colors)
 # radius in pixels of each color spot
@@ -30,4 +30,4 @@ def render(index, frame):
     if buf[index] == -1:
         return black
     else:
-        return chex(colors[buf[index]])
+        return colors[buf[index]]

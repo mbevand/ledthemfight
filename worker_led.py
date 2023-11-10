@@ -53,14 +53,31 @@ def gamma(x, ɣ):
                 [round(255 * (x / 255) ** ɣ) for x in range(256)])
     return _gamma[ɣ][x]
 
-def fto8b(color, ɣ=2.2):
-    # Convert floating-point RGB colors to 0-255 values. Floating-point values
-    # are relative to "brightness". For example, with brightness=128,
-    # (1.0, 0.5, 0) is converted to (128, 64, 0). However by default a gamma-
-    # correction ɣ=2.2 is applied, so this example actually converts to
-    # (56, 12, 0). Notice this is a soft-clamping, as effect modules can still
-    # pass floating-point values greater than 1.0 if they intentionally want to
-    # render pixels brighter than "brightness".
+def cto8b(color, ɣ=2.2):
+    # Convert a color, as returned by an effect module's render() function,
+    # to 8-bit 0-255 values. The color can be specified as:
+    # - 3-digit hex notation as a string: "#rgb"
+    # - 6-digit hex notation as a string: "#rrggbb"
+    # - floating point RGB values as a tuple: (1.0, 0.5, 0)
+    # The hex or floating-point values are relative to the "brightness" level.
+    # That is, #f or #ff or 1.0 will be converted to the maximum brightness.
+    # For example, assuming brightness=128, color (1.0, 0.5, 0) is converted to
+    # (128, 64, 0). Then gamma correction is applied; and with the default ɣ=2.2
+    # this example would convert to (56, 12, 0), which is the final color that
+    # would be sent to the physical LED string. Notice that unlike the #rgb or
+    # #rrggbb notation, the floating-point notation allows effect modules to
+    # pass values greater than 1.0 if they intentionally want to render pixels
+    # brighter than "brightness".
+    if type(color) == str:
+        assert(color.startswith('#'))
+        color = color[1:]
+        if len(color) == 3:
+            r = [int(c, 16) / 15 for c in color]
+        elif len(color) == 6:
+            r = [int(color[i:i + 2], 16) / 255 for i in range(0, len(color), 2)]
+        else:
+            raise Exception(f'color is not in the format #rgb or #rrggbb: #{color}')
+        color = tuple(r)
     return [gamma(min(255, round(x * brightness)), ɣ) for x in color]
 
 def solid(strip, color):
@@ -77,17 +94,6 @@ def rgb(r, g, b):
 def hsv(h, s, v):
     return colorsys.hsv_to_rgb(h, s, v)
 
-def chex(h):
-    if h.startswith('#'):
-        h = h[1:]
-    if len(h) == 3:
-        r = [int(c, 16) / 15 for c in h]
-    elif len(h) == 6:
-        r = [int(h[i:i + 2], 16) / 255 for i in range(0, len(h), 2)]
-    else:
-        r = (0, 0, 0)
-    return tuple(r)
-
 def dim(color, f=2):
     return tuple([x / f for x in color])
 
@@ -99,7 +105,6 @@ def enrich_namespace(num_pixels, mod):
     mod.num_pixels = num_pixels
     mod.rgb = rgb
     mod.hsv = hsv
-    mod.chex = chex
     mod.dim = dim
     mod.mul = mul
     for (k, v) in colors.items():
@@ -178,9 +183,9 @@ def render_one_frame(strings):
             st.fx_mod.before_frame(st.frame)
         for i in range(st.num_pixels):
             phys_i = i if not st.inverted else st.num_pixels - 1 - i
-            # do not pass a 2nd arg to fto8b() so as to perform gamma-correction
+            # do not pass a 2nd arg to cto8b() so as to perform gamma-correction
             # as we are rendering on a physical LED string
-            st.ps.setPixelColor(phys_i, Color(*fto8b(st.fx_mod.render(i, st.frame))))
+            st.ps.setPixelColor(phys_i, Color(*cto8b(st.fx_mod.render(i, st.frame))))
         st.ps.show()
         st.frame += 1
 
@@ -291,10 +296,10 @@ def render(num_pixels, frame_count, m):
         if hasattr(m, 'before_frame'):
             m.before_frame(frame)
         for i in range(num_pixels):
-            # Sequences are rendered in a browser shown on a display device
-            # that already does gamma correction, so here we disable gamma
-            # correction by passing 1.0 as the 2nd arg of fto8b()
-            pixels.append(fto8b(m.render(i, frame), 1.0))
+            # pass 1.0 as the 2nd arg of cto8b() in order to disable gamma
+            # correction, because sequences are rendered in a browser shown
+            # on a display device that already performs gamma correction
+            pixels.append(cto8b(m.render(i, frame), 1.0))
         frames.append(pixels)
     return frames
 
