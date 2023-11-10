@@ -77,6 +77,17 @@ def rgb(r, g, b):
 def hsv(h, s, v):
     return colorsys.hsv_to_rgb(h, s, v)
 
+def chex(h):
+    if h.startswith('#'):
+        h = h[1:]
+    if len(h) == 3:
+        r = [int(c, 16) / 15 for c in h]
+    elif len(h) == 6:
+        r = [int(h[i:i + 2], 16) / 255 for i in range(0, len(h), 2)]
+    else:
+        r = (0, 0, 0)
+    return tuple(r)
+
 def dim(color, f=2):
     return tuple([x / f for x in color])
 
@@ -88,6 +99,7 @@ def enrich_namespace(num_pixels, mod):
     mod.num_pixels = num_pixels
     mod.rgb = rgb
     mod.hsv = hsv
+    mod.chex = chex
     mod.dim = dim
     mod.mul = mul
     for (k, v) in colors.items():
