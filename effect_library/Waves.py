@@ -1,6 +1,6 @@
 import math
 
-colors = (blue, yellow)
+colors = (cyan, blue)
 segs = max(2, round(num_pixels / 30))
 period = 100 # period of oscillations (in nr. of frames)
 dist = None
