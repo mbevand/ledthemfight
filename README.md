@@ -3,7 +3,7 @@
 Official site: https://github.com/mbevand/ledthemfight
 
 *LED Them Fight* is a controller for addressable LED strings. It runs on Raspberry Pi hardware; LED strings are connected directly to GPIO pins. It is easy to use and customize through its built-in web server:
-* Small Python codebase, only one dependency: [rpi-ws281x](https://github.com/jgarff/rpi_ws281x) library
+* Tiny Python codebase (less than 1k lines of code), only one dependency: [rpi-ws281x](https://github.com/jgarff/rpi_ws281x) library
 * Intuitive responsive web interface, ideal for smartphones, tablets, and computers
 * Many pre-defined animated or static effects
 * Custom effects can be added with as little as 1 or 2 lines of Python code
@@ -186,3 +186,36 @@ Change the brightness level (1-255):
 ```
 $ curl http://HOST/button --json '{"name":"brightness","value":"255"}'
 ```
+
+# Architecture
+
+The main process [ledthemfight.py](ledthemfight.py) runs the web server. All
+of the web server code is in this file. I wanted to keep LED Them Fight simple
+(KISS) so I use Python's built-in `http.server`. Before the web server runs
+the code forks 2 sub-processes:
+
+1. `led_driver`: the entry point is `drive_led_forever()` in [worker_led.py](worker_led.py).
+  This process imports the `rpi_ws281x` module and drives the LED string.
+
+2. `seqgen` or sequence generator: the entry point is `seqgen_forever()` in
+  [worker_led.py](worker_led.py). The role of this process is merely to monitor
+  effect module files in [effect_library/](effect_library/), and when it detects
+  a change it will load the effect, run it on a virtual 60-pixel LED string,
+  and save 10 seconds worth of sequence of frames containing the RGB colors for
+  each pixel. The output is saved in binary sequence files, in [www/sequence/](www/sequence/).
+  It is a raw binary format containing 3 (bytes per pixel) * 60 (pixels) * 600
+  (frames) = 108,000 bytes of data. I should probably change this to the standard
+  xLights FSEQ format. The purpose of these sequence files is so that the web interface
+  can download them and show effect previews in the <canvas> elements.
+
+The very first time LED Them Fight is launched, it creates sequence files for all the
+built-in effects, which takes ~600 ms per effect, so ~13 seconds for the 21 built-in
+effects.
+
+For inter-process communication, when the web server needs to communicate with
+the led driver, or vice versa, I use two `multiprocessing.Queue` objects named
+`to_led_driver` and `to_web_server`. For example when the end-user clicks in the
+web interface on the Rainbow effect to render it, the web server puts the array object
+`["/button", ("effect", "Rainbow")]` in the `to_led_driver` queue, and the
+led driver process gets it and starts it. The `to_web_server` queue is only used
+so the led driver can report its status back to the web server.
