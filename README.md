@@ -36,7 +36,7 @@ $ sudo ./ledthemfight.py  # add "-p 1234" to listen on a port other than 80/tcp
 
 5. Finally, browse http://x.x.x.x (IP address of the Pi) to control the LEDs. The web interface will prompt for the number of LED strings and LED pixels per string. Accept the defaults, click submit, then you land on the intuitive web interfacee—that is it!
 
-![Screenshot](screenshot.gif)
+![Screenshot](screenshot.png)
 
 # Guide to Create Custom Effects
 
