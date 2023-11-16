@@ -53,7 +53,7 @@ $ sudo ./ledthemfight.py  # add "-p 1234" to listen on a port other than 80/tcp
 
 5. Browse http://x.x.x.x (IP address of the Pi). The web interface will prompt for the number of LED strings and LED pixels per string. Accept the defaults, click submit. You land on the main web interface page.
 
-https://github.com/mbevand/mbevand.github.io/raw/main/ltfscreen.mp4
+https://github.com/mbevand/ledthemfight/assets/2995228/471bbf01-dcc2-4adc-a49d-0d2e6833c509
 
 6. Now, the fun part. You are going to write your own effect. They are defined in
 the [effect_library/](effect_library/) directory:
