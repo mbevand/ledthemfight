@@ -51,7 +51,7 @@ $ cd ledthemfight
 $ sudo ./ledthemfight.py  # add "-p 1234" to listen on a port other than 80/tcp
 ```
 
-5. Browse http://x.x.x.x (IP address of the Pi). The web interface will prompt for the number of LED strings and LED pixels per string. Accept the defaults, click submit. You land on the main web interface page.
+5. Browse http://x.x.x.x (IP address of the Pi). The web interface will prompt for the number of LED strings and LED pixels per string. Accept the defaults, click submit. The browser redirects to the main page which shows a preview of all the effects:
 
 https://github.com/mbevand/ledthemfight/assets/2995228/471bbf01-dcc2-4adc-a49d-0d2e6833c509
 
