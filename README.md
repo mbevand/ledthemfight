@@ -28,6 +28,8 @@ Compare this to current solutions: for example if you are using the popular [WLE
 
 But with LED Them Fight, all you need is a text editor to write effects in as little as 1 or 2 lines of Python, and when you edit a `red` to `blue`, it **instantly and automatically** notices the edit and renders blue on the LED string. You have basically a live view of your effect code as you are typing it! This allows to very, very quickly iterate and experiment with animations and colors.
 
+After I started LED Them Fight, and decided on implementing the concept of effect modules, I eventually discovered [Pixelblaze](https://electromage.com/pixelblaze) which is close to my ideal product. It is much more featureful however: it is closed-source (deal breaker for me), runs on ESP32 instead of a Raspberry Pi (the latter packs more CPU power for more complex effects), their effect modules are written in a subset of JavaScript (full Python support + full Python standard library is easier to code for), and their effects have to be edited in-browser (a proper text editor with syntax highlighting and autocompletion is more comfortable especially for the more complex effects).
+
 # Quick Start Guide
 
 1. A [Raspberry Pi](https://www.raspberrypi.com/products/) computer is required. I recommend installing the [Raspberry Pi OS "Lite" version](https://www.raspberrypi.com/software/) without desktop. Or else, with the desktop version you may have to jump through hoops to disable audio device drivers as they [interfere with `rpi-ws281x`](https://github.com/jgarff/rpi_ws281x#limitations)
@@ -209,9 +211,24 @@ the code forks 2 sub-processes:
   can download them and show effect previews in the `<canvas>` elements.
 
 The very first time LED Them Fight is launched, it creates sequence files for all the
-built-in effects, which takes ~600 ms per effect, so ~13 seconds for the 21 built-in
-effects. So if you load the browser page during these first ~13 seconds some previews
-will be missing.
+built-in effects, which takes ~600 ms per effect (on Raspberry Pi 4), so ~13
+seconds for the 21 built-in effects. So if you load the browser page during
+these first ~13 seconds some previews will be missing.
+
+The first time LED Them Fight is launched, it takes you through a configuration
+wizard. The settings are saved in the configuration file `/etc/ledthemfight.conf`.
+You may edit this file by hand if needed, then relaunch LED Them Fight to reload
+the new settings:
+
+```
+{
+  "set_up": true,
+  "name": "My LEDs",
+  "nr_led_strings": 1,
+  "num_pixels": 466,
+  "inverted": false
+}
+```
 
 For inter-process communication, when the web server needs to communicate with
 the led driver, or vice versa, I use two `multiprocessing.Queue` objects named
