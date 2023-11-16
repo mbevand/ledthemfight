@@ -95,10 +95,10 @@ move along your LED string at a speed of 1 pixel per frame.
 
 # Effect Module Reference
 
-Effect modules are written in Python. You can write any valid Python code. They
+Effect modules are written in Python. Any valid Python code is OK. They
 are loaded and executed by the Python interpreter. Typically the standard
-Python library modules `random`, `math` are useful to write effects. The best
-way to learn how to write modules is to read the built-in ones:
+library modules `random`, `math` are useful to write effects. For examples,
+just read the built-in ones:
 [effect_library/](effect_library/)
 
 The module must define a `render(index, frame)` function. LED Them Fight calls
@@ -106,7 +106,7 @@ this function for every pixel, for every frame. The function must return
 the color of the pixel. The `index` argument is the index of the pixel in the
 LED string from 0 to N-1 if you have N pixels. The `frame` argument is the
 number of the frame, starting from 0; it increments by 1 for every frame, so it
-increments by 60 every seconds as by default LED Them Fight renders effects at
+increments by 60 every second as by default LED Them Fight renders effects at
 60 frames per second.
 
 Optionally, the module may also define a `before_frame(frame)` function. LED Them
@@ -118,24 +118,24 @@ The color returned by render() can be specified as:
 * Constants: `red`, `black`, `green`, etc (see the list at top of [worker_led.py](worker_led.py))
 * 3-digit hex notation as a string: `"#rgb"`
 * 6-digit hex notation as a string: `"#rrggbb"`
-* Floating point RGB values: `rgb(1, 0, 0)`
-* Floating point HSV values: `hsv(0, 1, 1)`
+* Floating point RGB values, eg. white is: `rgb(1, 1, 1)`
+* Floating point HSV values, eg. red is: `hsv(0, 1, 1)`
 
 Some variables and functions are exposed to effect modules:
 
 `num_pixels` is a global integer reflecting the number of pixels in the LED string.
 
-`rgb(r, g, b)` to create an RGB color, where the components should be floating-point
+`rgb(r, g, b)` creates an RGB color, where the components should be floating-point
 values between 0.0 and 1.0. However note that LED Them Fight implements the
 concept of global brightness, controlled by a slider in the web interface. An effect
 that returns rgb(1, 1, 1) will render a white pixel that is clamped to the global brightness.
 However it is possible to still render a pixel brighter than this by using values greater
 than 1 for example rgb(2, 2, 2). This should be use sporadically only when warranted, such
 as implementing a sparkling effect when just a few pixels in the string are sparkling
-brighter than other pixels.
+brighter than most other pixels.
 
-`hsv(h, s, v)` to create a nHSV color, where the components should be floating-point
-values between 0.0 and 1.0.
+`hsv(h, s, v)` creates an HSV color, where the components should be floating-point
+values between 0.0 and 1.0. Cool for [rainbows](effect_library/Rainbow.py).
 
 `dim(color, f)` to dim a color. `color` must be either an `rgb()` or `hsv()`
 value.  `f` is a floating-point factor to reduce the brightness. For example
@@ -148,7 +148,7 @@ respectively dim or brighten the color. `mul(color, 0.5)` is equivalent to
 
 # Relay Support
 
-When addressable LED strings are "off", displaying pure black, they still draw some power. So if you have them on a dedicated power supply, wire a relay in series on the LED power supply AC input, so LED Them Fight can physically turn it off.
+When addressable LED strings are "off", displaying pure black, they still draw some power. So if you have them on a dedicated power supply, it is a good idea to wire a relay in series on the LED power supply AC input, so that LED Them Fight can physically turn it on and off.
 
 Get a suitable relay that can be controlled from the Pi's 3.3V output level, and connect it to GPIO15 (pin 10) and GND (eg. pin 9). LED Them Fight will drive GPIO15 high—activating the relay—when the LEDs are lit. I like to use this [relay-enabled power strip](https://www.digital-loggers.com/iot2.html) as there is no need to work directly with high AC voltage wires.
 
