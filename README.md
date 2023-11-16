@@ -14,7 +14,7 @@ Official site: https://github.com/mbevand/ledthemfight
 * Optional activation of a relay to automatically switch on a power supply when the LEDs are lit
 * Simple HTTP API that can be used for example from `curl`
 
-![LED Them Fight Logo](https://github.com/mbevand/mbevand.github.io/blob/main/ltflogo.gif?raw=true)
+![LED Them Fight Logo](https://github.com/mbevand/ledthemfight/assets/2995228/1ccc80b9-c7e0-4138-a4c1-9b336cebd001)
 
 # Motivation
 
