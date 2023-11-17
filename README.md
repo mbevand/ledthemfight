@@ -121,8 +121,11 @@ def render(index, frame):
     return black if ((index - frame) % 20) else red
 ```
 
-This displays red dots separated by 20 pixels that move along the LED string at a
-speed of 1 pixel per frame.
+This displays red dots separated by 20 pixels that move along the LED string at
+a speed of 1 pixel per frame. Very complex effects are typically implemented by
+pre-rendering in a Python `array`, and having the `render()` function just read
+from the `array`. For example see the LED Them Fight effect
+[Fireworks.py](effect_library/Fireworks.py).
 
 # Effect Module Reference
 
