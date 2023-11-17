@@ -3,7 +3,7 @@
 Official site: https://github.com/mbevand/ledthemfight
 
 *LED Them Fight* is a controller for addressable LED strings. It runs on Raspberry Pi hardware; LED strings are connected directly to GPIO pins. It is easy to use and customize through its built-in web server:
-* Tiny Python codebase (less than 1k lines of code), only one dependency: [rpi-ws281x](https://github.com/jgarff/rpi_ws281x) library
+* Very small Python codebase (less than 1k lines of code), only one dependency: [rpi-ws281x](https://github.com/jgarff/rpi_ws281x) library
 * Intuitive responsive web interface, ideal for smartphones, tablets, and computers
 * Many pre-defined animated or static effects
 * Custom effects can be added with as little as 1 or 2 lines of Python code
@@ -60,8 +60,8 @@ the [effect_library/](effect_library/) directory:
 
 ```
 $ ls effect_library/
-Blink.py       Fireworks.py  Rainbow.py      Sparkles.py
-Breathe.py     Flag_FR.py    Random.py	     Spreading_Colors.py
+Blink.py    Fireworks.py  Rainbow.py
+Breathe.py  Flag_FR.py    Random.py
 ...
 ```
 
@@ -72,26 +72,49 @@ def render(index, frame):
     return red
 ```
 
-8. As you save the file, LED Them Fight automatically detects it and renders it in a simulated LED string, which you can preview by reloading your browser page. The simulated LED string appears in the web interface under the name "MyEffect". Then click on it to render it on the physical LED string, showing your nice red color. Done! 60 seconds as promised!
+As you save the file, LED Them Fight automatically detects it and renders it in
+a simulated LED string, which you can preview by reloading your browser page.
+The preview will be in the web interface under the name "MyEffect". Then click
+on it to render it on the physical LED string, showing your nice red color.
+Done. 60 seconds, as promised!
 
-9. Let's make it flash red and blue. Edit `MyEffect.py` to this:
+8. Let's make it flash red and blue. Edit `MyEffect.py` to this:
 
 ```
 def render(index, frame):
     return red if (frame % 60) < 30 else blue
 ```
 
-Save the file. LED Them Fight automatically detects the edit, and instantly starts rendering this new version on the LED string. By default it renders at 60 frames per second, so this code will make it flash red and blue once a second.
+As soon as you save the file, because it was already being rendered on the
+physical LED string, the edit is automatically detected and without any user
+interaction you see flashing red and blue. This works because `frame` is the
+frame counter. By default rendering is done at 60 frames per second. So `(frame
+% 60) < 30` is `True` only in the first half of every second.
 
-10. Let's animate it. Also simple:
+9. Let's display a rainbow:
+
+```
+def render(index, frame):
+    return hsv((index % num_pixels) / num_pixels, 1, 1)
+```
+
+Again, as soon as you save the file, you see the rainbow. Notice how the code
+uses `index` which is the index of the pixel in the string, combined with
+`num_pixels` which is the total number of pixels. So `(index % num_pixels) /
+num_pixels` returns a floating point value from 0.0 (at the beginning of the
+string) to 1.0 (at the end). This floating point value is used as the hue
+parameter of the `hsv()` function which returns HSV colors, with the hue of
+each pixel thus varying from the beginning to the end of the LED string.
+
+10. Simple moving animation are easy by combining the `index` and `frame` number:
 
 ```
 def render(index, frame):
     return black if ((index - frame) % 20) else red
 ```
 
-Again, the edit is instantly picked up, so now you see red dots separated by 20 pixels
-move along your LED string at a speed of 1 pixel per frame.
+Now you see red dots separated by 20 pixels move along your LED string at a
+speed of 1 pixel per frame.
 
 # Effect Module Reference
 
@@ -190,9 +213,9 @@ $ curl http://HOST/button --json '{"name":"brightness","value":"255"}'
 # Architecture
 
 The main process [ledthemfight.py](ledthemfight.py) runs the web server. All
-of the web server code is in this file. I wanted to keep LED Them Fight simple
-(KISS) so I use Python's built-in `http.server`. Before the web server runs
-the code forks 2 sub-processes:
+of the web server support code is in this file. I want to keep LED Them Fight
+simple (KISS) so I use Python's built-in `http.server`. When starting up,
+the code also forks 2 sub-processes:
 
 1. `led_driver`: the entry point is `drive_led_forever()` in [worker_led.py](worker_led.py).
   This process imports the `rpi_ws281x` module and drives the LED string.
