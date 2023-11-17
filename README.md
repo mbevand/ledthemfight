@@ -31,7 +31,7 @@ But with LED Them Fight, all you need is a text editor to write effects in as fe
 
 # Quick Start Guide
 
-1. A [Raspberry Pi](https://www.raspberrypi.com/products/) computer is required. I recommend installing the [Raspberry Pi OS "Lite" version](https://www.raspberrypi.com/software/) without desktop. Or else, with the desktop version you may have to jump through hoops to disable audio device drivers as they [interfere with `rpi-ws281x`](https://github.com/jgarff/rpi_ws281x#limitations)
+1. A [Raspberry Pi](https://www.raspberrypi.com/products/) computer is required. I recommend installing the [Raspberry Pi OS "Lite" version](https://www.raspberrypi.com/software/) without desktop. Or else, with the desktop version you may have to jump through hoops to disable audio device drivers as they [interfere with the rpi-ws281x library](https://github.com/jgarff/rpi_ws281x#limitations)
 
 2. Connect the Pi to the LED string:
    * GPIO18 (pin 12) to the LED data input line
@@ -67,7 +67,7 @@ Breathe.py  Flag_FR.py    Random.py
 ...
 ```
 
-7. Create a new effect file in this directory named `MyEffect.py`. Let's say you want the LED string to display a static red color, so write this in `MyEffect.py`:
+7. Create a new effect file in this directory with the `.py` extension, for example `MyEffect.py`. Let's say you want the LED string to display a static red color, so write this in `MyEffect.py`:
 
 ```
 def render(index, frame):
@@ -176,6 +176,14 @@ respectively dim or brighten the color. `mul(color, 0.5)` is equivalent to
 When addressable LED strings are "off", displaying pure black, they still draw some power. So if you have them on a dedicated power supply, it is a good idea to wire a relay in series on the LED power supply AC input, so that LED Them Fight can physically turn it on and off.
 
 Get a suitable relay that can be controlled from the Pi's 3.3V output level, and connect it to GPIO15 (pin 10) and GND (eg. pin 9). LED Them Fight will drive GPIO15 high—activating the relay—when the LEDs are lit. I like to use this [relay-enabled power strip](https://www.digital-loggers.com/iot2.html) as there is no need to work directly with high AC voltage wires.
+
+# GPIO Pin Reference
+
+LED Them Fight uses the following hardcoded Raspberry Pi pins:
+
+* GPIO18: data output for the 1st LED string
+* GPIO13: data output for the 2nd LED string
+* GPIO15: relay output, driven high when an effect is being rendered on one of the LED strings
 
 # API
 
