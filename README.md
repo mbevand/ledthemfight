@@ -80,7 +80,7 @@ The preview will be in the web interface under the name "MyEffect". Then click
 on it to render it on the physical LED string, showing your nice red color.
 Done. 60 seconds, as promised!
 
-8. Let's make it flash red and blue. Edit `MyEffect.py` to this:
+8. With more than 60 seconds we can do more fun things. Let's make it flash red and blue. Edit `MyEffect.py` to this:
 
 ```
 def render(index, frame):
@@ -89,9 +89,14 @@ def render(index, frame):
 
 As soon as you save the file, because it was already being rendered on the
 physical LED string, the edit is automatically detected and without any user
-interaction you see flashing red and blue. This works because `frame` is the
-frame counter. By default rendering is done at 60 frames per second. So `(frame
-% 60) < 30` is `True` only in the first half of every second.
+interaction the string flashes red and blue. Now you might understand the
+simple architecture that LED Them Fight implements: for every frame, for every
+pixel, it calls your `render()` function which returns the color for that
+pixel. The `index` argument is the index of the pixel in the string. The
+`frame` argument is the frame counter. By default rendering is done at 60
+frames per second. So `(frame % 60) < 30` is `True` only in the first half of
+every second. So all pixels will flash red in the first half of every second,
+and will flash blue in the other half.
 
 9. Let's display a rainbow:
 
@@ -101,12 +106,12 @@ def render(index, frame):
 ```
 
 Again, as soon as you save the file, you see the rainbow. Notice how the code
-uses `index` which is the index of the pixel in the string, combined with
-`num_pixels` which is the total number of pixels. So `(index % num_pixels) /
-num_pixels` returns a floating point value from 0.0 (at the beginning of the
-string) to 1.0 (at the end). This floating point value is used as the hue
-parameter of the `hsv()` function which returns HSV colors, with the hue of
-each pixel thus varying from the beginning to the end of the LED string.
+uses `index` (index of the pixel in the string) combined with `num_pixels`
+which is a global variable reflecting the total number of pixels. So `(index %
+num_pixels) / num_pixels` returns a floating point value from 0.0 (at the
+beginning of the string) to 1.0 (at the end). This floating point value is used
+as the hue parameter of the `hsv()` function which returns HSV colors. So the
+hue of each pixel varies from the beginning to the end of the LED string.
 
 10. Simple moving animation are easy by combining the `index` and `frame` number:
 
@@ -256,7 +261,8 @@ these first ~13 seconds some previews will be missing.
 The first time LED Them Fight is launched, it takes you through a configuration
 wizard. The settings are saved in the configuration file `/etc/ledthemfight.conf`.
 You may edit this file by hand if needed, then relaunch LED Them Fight to reload
-the new settings:
+the new settings. For example I have a system with 1 LED string of 466 pixels,
+so the wizard generated this config file for me:
 
 ```
 {
