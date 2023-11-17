@@ -10,8 +10,9 @@ Official site: https://github.com/mbevand/ledthemfight
 * Custom effects can be added with as few as 1 or 2 lines of Python code
 * Various types of LED strings, strips, and arrays are supported: WS2811, WS2812, WS2813, WS2814, WS2815, SK6812, SK6813, SK6822, NeoPixels, etc; specifically anything supported by the underlying rpi-ws281x library
 * Maximum of 2 LED strings, each on a unique GPIO output
-* Global brightness variable
 * Optional activation of a relay to automatically switch on a power supply when the LEDs are lit
+* Global brightness setting
+* Automatic gamma correction (ɣ=2.2)
 * Simple HTTP API that can be used for example from `curl`
 
 ![LED Them Fight Logo](https://github.com/mbevand/ledthemfight/assets/2995228/1ccc80b9-c7e0-4138-a4c1-9b336cebd001)
