@@ -106,12 +106,13 @@ def render(index, frame):
 ```
 
 Again, as soon as you save the file, you see the rainbow. Notice how the code
-uses `index` (index of the pixel in the string) combined with `num_pixels`
-which is a global variable reflecting the total number of pixels. So `(index %
-num_pixels) / num_pixels` returns a floating point value from 0.0 (at the
-beginning of the string) to 1.0 (at the end). This floating point value is used
-as the hue parameter of the `hsv()` function which returns HSV colors. So the
-hue of each pixel varies from the beginning to the end of the LED string.
+uses `num_pixels` which is a global variable reflecting the total number of
+pixels, combined with `index` (index of the pixel in the string, from `0` to
+`num_pixels-1`). Therefore `(index % num_pixels) / num_pixels` returns a
+floating point value from 0.0 (at the beginning of the string) to almost 1.0
+(at the end). This floating point value is used as the hue parameter of the
+`hsv()` function which returns an HSV color. So the hue of each pixel varies
+smoothly from the beginning to the end of the LED string.
 
 10. Simple moving animation are easy by combining the `index` and `frame` number:
 
@@ -120,7 +121,7 @@ def render(index, frame):
     return black if ((index - frame) % 20) else red
 ```
 
-Now you see red dots separated by 20 pixels move along your LED string at a
+This displays red dots separated by 20 pixels that move along the LED string at a
 speed of 1 pixel per frame.
 
 # Effect Module Reference
