@@ -27,7 +27,7 @@ Compare this to current solutions: for example if you are using the popular [WLE
 
 2. Or you download and install [hundreds of megabytes of Visual Studio Code / PlatformIO packages](https://kno.wled.ge/advanced/compiling-wled/) just to compile WLED, then edit its source to code your effect in C++, then compile and reflash your ESP32, then figure out your effect has some bugs so you re-compile, re-flash, re-test, etc. Slow testing iterations. Annoying.
 
-But with LED Them Fight, all you need is a text editor to write effects in as few as 1 or 2 lines of Python code, and when you edit a `red` to `blue`, it **instantly and automatically** notices the edit and renders blue on the LED string. The browser also shows a preview of the effect. You have basically a live view and live preview of your effect code as you are typing it! This allows to very, very quickly iterate and experiment with animations and colors.
+But with LED Them Fight, all you need is a text editor to write effects in as few as 1 or 2 lines of Python code, and when you edit a `red` to `blue`, it **instantly and automatically** notices the edit and renders blue on the LED string. The browser also shows a preview of the effect. You have basically a live view and live preview of your code as you are typing it! This allows to very, very quickly iterate and experiment with animations and colors.
 
 # Quick Start Guide
 
@@ -175,7 +175,14 @@ respectively dim or brighten the color. `mul(color, 0.5)` is equivalent to
 
 When addressable LED strings are "off", displaying pure black, they still draw some power. So if you have them on a dedicated power supply, it is a good idea to wire a relay in series on the LED power supply AC input, so that LED Them Fight can physically turn it on and off.
 
-Get a suitable relay that can be controlled from the Pi's 3.3V output level, and connect it to GPIO15 (pin 10) and GND (eg. pin 9). LED Them Fight will drive GPIO15 high—activating the relay—when the LEDs are lit. I like to use this [relay-enabled power strip](https://www.digital-loggers.com/iot2.html) as there is no need to work directly with high AC voltage wires.
+Get a suitable relay that can be controlled from the Pi's 3.3V output level,
+and connect it to GPIO15 (pin 10) and GND (eg. pin 9). LED Them Fight will
+drive GPIO15 high—activating the relay—when the LEDs are lit. I like to use
+this [relay-enabled power strip](https://www.digital-loggers.com/iot2.html)
+([SparkFun](https://www.sparkfun.com/products/14236),
+[Adafruit](https://www.adafruit.com/product/2935),
+[Amazon](https://www.amazon.com/dp/B00WV7GMA2))
+as there is no need to work directly with high AC voltage wires.
 
 # GPIO Pin Reference
 
