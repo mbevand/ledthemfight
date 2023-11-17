@@ -264,7 +264,7 @@ status back to the web server.
 
 # Pixelblaze
 
-After I started LED Them Fight, and decided on implementing the concept of effect modules, I eventually discovered [Pixelblaze](https://electromage.com/pixelblaze) which is close to my ideal product. It is much more featureful, however:
+After I started LED Them Fight, and decided on implementing the concept of effect modules, I eventually discovered [Pixelblaze](https://electromage.com/pixelblaze) which implements the same concept, and is close to my ideal product. It is much more featureful, however:
 
 * it is closed-source (deal breaker for me; I need hackability)
 * it runs on ESP32 instead of a Raspberry Pi (the latter offerts more CPU power for more complex effects)
