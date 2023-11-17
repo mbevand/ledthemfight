@@ -9,7 +9,7 @@ Official site: https://github.com/mbevand/ledthemfight
 * Many pre-defined animated or static effects
 * Custom effects can be added with as few as 1 or 2 lines of Python code
 * Various types of LED strings, strips, and arrays are supported: WS2811, WS2812, WS2813, WS2814, WS2815, SK6812, SK6813, SK6822, NeoPixels, etc; specifically anything supported by the underlying rpi-ws281x library
-* Maximum of 2 LED strings, each on a unique GPIO output
+* Currently 1 LED string supported (WIP to support two, each on a unique GPIO output)
 * Optional activation of a relay to automatically switch on a power supply when the LEDs are lit
 * Global brightness setting
 * Automatic gamma correction (ɣ=2.2)
@@ -182,7 +182,7 @@ Get a suitable relay that can be controlled from the Pi's 3.3V output level, and
 LED Them Fight uses the following hardcoded Raspberry Pi pins:
 
 * GPIO18: data output for the 1st LED string
-* GPIO13: data output for the 2nd LED string
+* GPIO13: data output for the 2nd LED string (not yet supported - work in progress)
 * GPIO15: relay output, driven high when an effect is being rendered on one of the LED strings
 
 # API
