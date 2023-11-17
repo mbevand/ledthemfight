@@ -5,9 +5,9 @@ Official site: https://github.com/mbevand/ledthemfight
 *LED Them Fight* is a controller for addressable LED strings. It runs on Raspberry Pi hardware; LED strings are connected directly to GPIO pins. It is easy to use and customize through its built-in web server:
 * Very small Python codebase (less than 1k lines of code), only one dependency: [rpi-ws281x](https://github.com/jgarff/rpi_ws281x) library
 * Intuitive responsive web interface, ideal for smartphones, tablets, and computers
-* Many pre-defined animated or static effects
-* Custom effects can be added with as little as 1 or 2 lines of Python code
 * In-browser preview of effects using animated `<canvas>` elements
+* Many pre-defined animated or static effects
+* Custom effects can be added with as few as 1 or 2 lines of Python code
 * Various types of LED strings, strips, and arrays are supported: WS2811, WS2812, WS2813, WS2814, WS2815, SK6812, SK6813, SK6822, NeoPixels, etc; specifically anything supported by the underlying rpi-ws281x library
 * Maximum of 2 LED strings, each on a unique GPIO output
 * Global brightness variable
@@ -18,15 +18,15 @@ Official site: https://github.com/mbevand/ledthemfight
 
 # Motivation
 
-The main reason I created LED Them Fight is that I wanted to make it *dead simple* to create custom effects rendered live and reliably. No streaming real-time pixel data over unreliable Wi-Fi. No downloading hundreds of megabytes of firmware development packages. No reflashing microcontrollers. No recompiling anything. Just type simple Python code which is instantly rendered on a locally-attached LED string. From a factory-reset Raspberry Pi **it takes less than 60 seconds to install & configure LED Them Fight and code your first custom effect!**
+The main reason I created LED Them Fight is that I wanted to make it *dead simple* to create custom effects rendered live and reliably. No streaming real-time pixel data over unreliable Wi-Fi. No downloading hundreds of megabytes of firmware development packages. No reflashing microcontrollers. No recompiling anything. Just write simple Python code which is instantly rendered on a locally-attached LED string. From a factory-reset Raspberry Pi **it takes less than 60 seconds to install & configure LED Them Fight and code your first custom effect!**
 
 Compare this to current solutions: for example if you are using the popular [WLED](https://kno.wled.ge/) controller, there are two options to create custom effects:
 
-1. Either you stream real-time pixel data from a computer [over UDP to WLED](https://kno.wled.ge/interfaces/udp-realtime/), but WLED runs on ESP32 which is typically on Wi-Fi, so animations will inevitably glitch. And even if you want to get an Ethernet-enabled ESP32 it is not convenient or may not be possible to wire Ethernet where you need. Plus the requirement to have two systems (computer + ESP32) adds complexity and cost.
+1. Either you stream real-time pixel data from a computer [over UDP to WLED](https://kno.wled.ge/interfaces/udp-realtime/), but WLED runs on ESP32 which is typically Wi-Fi-connected, and Wi-Fi may not be available or reliable where you need it, such as an outdoor location where holiday lights are set up. Pulling an Ethernet cable may not be convenient. Overall, the requirement to have two systems (computer + ESP32) and reliable networking adds complexity and cost.
 
-2. Or you download and install [hundreds of megabytes of Visual Studio Code / PlatformIO packages](https://kno.wled.ge/advanced/compiling-wled/), then edit WLED's source to code your effect in C++, then compile and reflash your ESP32, then figure out your effect has some bugs so you re-compile, re-flash, re-test, and continuously waste time with these test cycles.
+2. Or you download and install [hundreds of megabytes of Visual Studio Code / PlatformIO packages](https://kno.wled.ge/advanced/compiling-wled/) just to compile WLED, then edit its source to code your effect in C++, then compile and reflash your ESP32, then figure out your effect has some bugs so you re-compile, re-flash, re-test, etc. Slow testing iterations. Annoying.
 
-But with LED Them Fight, all you need is a text editor to write effects in as little as 1 or 2 lines of Python, and when you edit a `red` to `blue`, it **instantly and automatically** notices the edit and renders blue on the LED string. You have basically a live view of your effect code as you are typing it! This allows to very, very quickly iterate and experiment with animations and colors.
+But with LED Them Fight, all you need is a text editor to write effects in as few as 1 or 2 lines of Python code, and when you edit a `red` to `blue`, it **instantly and automatically** notices the edit and renders blue on the LED string. The browser also shows a preview of the effect. You have basically a live view and live preview of your effect code as you are typing it! This allows to very, very quickly iterate and experiment with animations and colors.
 
 # Quick Start Guide
 
@@ -45,10 +45,11 @@ That is it for the hardware side. Now, for the software side, you need less than
 4. On the Pi, install LED Them Fight and its dependencies:
 
 ```
-$ sudo apt install python3-pip && sudo pip3 install rpi-ws281x
+$ sudo apt install python3-pip
+$ sudo pip3 install rpi-ws281x
 $ git clone https://github.com/mbevand/ledthemfight
 $ cd ledthemfight
-$ sudo ./ledthemfight.py  # add "-p 1234" to listen on a port other than 80/tcp
+$ sudo ./ledthemfight.py
 ```
 
 5. Browse http://x.x.x.x (IP address of the Pi). The web interface will prompt for the number of LED strings and LED pixels per string. Accept the defaults, click submit. The browser redirects to the main page which shows a preview of all the effects:
@@ -121,7 +122,7 @@ speed of 1 pixel per frame.
 Effect modules are written in Python. Any valid Python code is OK. They
 are loaded and executed by the Python interpreter. Typically the standard
 library modules `random`, `math` are useful to write effects. For examples,
-just read the built-in ones:
+see the effects that ship with LED Them Fight:
 [effect_library/](effect_library/)
 
 The module must define a `render(index, frame)` function. LED Them Fight calls
@@ -135,7 +136,7 @@ increments by 60 every second as by default LED Them Fight renders effects at
 Optionally, the module may also define a `before_frame(frame)` function. LED Them
 Fight calls this function once per frame, before calling `render()` for each pixel.
 Typically this is useful for LED animations that need to calculate the state of the
-animation.
+animation, for example see [Color_Wipe.py](effect_library/Color_Wipe.py).
 
 The color returned by render() can be specified as:
 * Constants: `red`, `black`, `green`, etc (see the list at top of [worker_led.py](worker_led.py))
