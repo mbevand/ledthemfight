@@ -4,10 +4,10 @@ Official site: https://github.com/mbevand/ledthemfight
 
 *LED Them Fight* is a controller for addressable LED strings. It runs on Raspberry Pi hardware; LED strings are connected directly to GPIO pins. It is easy to use and customize through its built-in web server:
 * Very small Python codebase (less than 1k lines of code), only one dependency: [rpi-ws281x](https://github.com/jgarff/rpi_ws281x) library
-* Intuitive responsive web interface, ideal for smartphones, tablets, and computers
 * In-browser preview of effects using animated `<canvas>` elements
-* Many pre-defined animated or static effects
-* Custom effects can be added with as few as 1 or 2 lines of Python code
+* 20+ built-in effects
+* Custom effect modules can be coded in as few as 1 or 2 lines of Python—unleash your creativity!
+* Responsive web interface, ideal for smartphones, tablets, and computers
 * Various types of LED strings, strips, and arrays are supported: WS2811, WS2812, WS2813, WS2814, WS2815, SK6812, SK6813, SK6822, NeoPixels, etc; specifically anything supported by the underlying rpi-ws281x library
 * Currently 1 LED string supported (WIP to support two, each on a unique GPIO output)
 * Optional activation of a relay to automatically switch on a power supply when the LEDs are lit
@@ -19,9 +19,9 @@ Official site: https://github.com/mbevand/ledthemfight
 
 # Motivation
 
-The main reason I created LED Them Fight is that I wanted to make it *dead simple* to create custom effects rendered live and reliably. No streaming real-time pixel data over unreliable Wi-Fi. No downloading hundreds of megabytes of firmware development packages. No reflashing microcontrollers. No recompiling anything. Just write simple Python code which is instantly rendered on a locally-attached LED string. From a factory-reset Raspberry Pi **it takes less than 60 seconds to install & configure LED Them Fight and code your first custom effect!**
+The main reason I created LED Them Fight is that I wanted to make it *dead simple* to create completely original, custom effects rendered live and reliably. No streaming real-time pixel data over unreliable Wi-Fi. No downloading hundreds of megabytes of firmware development packages. No reflashing microcontrollers. No recompiling anything. Just write simple Python code which is instantly rendered on a locally-attached LED string, and on an in-browser preview. From a factory-reset Raspberry Pi **it takes less than 60 seconds to install & configure LED Them Fight and code your first custom effect!**
 
-Compare this to current solutions: for example if you are using the popular [WLED](https://kno.wled.ge/) controller, there are two options to create custom effects:
+Compare this to current solutions: for example if you are using the popular [WLED](https://kno.wled.ge/) controller, there are two options to create a custom effect that is not part of its list of built-in effects:
 
 1. Either you stream real-time pixel data from a computer [over UDP to WLED](https://kno.wled.ge/interfaces/udp-realtime/), but WLED runs on ESP32 which is typically Wi-Fi-connected, and Wi-Fi may not be available or reliable where you need it, such as an outdoor location where holiday lights are set up. Pulling an Ethernet cable may not be convenient. Overall, the requirement to have two systems (computer + ESP32) and reliable networking adds complexity and cost.
 
