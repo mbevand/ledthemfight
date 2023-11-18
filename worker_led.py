@@ -43,9 +43,6 @@ def log(m):
 def err(m):
     sys.stderr.write(f'{proc_name}: {m}\n')
 
-def avg(values):
-    return sum(values) / len(values)
-
 def gamma(x, ɣ):
     # x is 0-255
     if ɣ not in _gamma:
