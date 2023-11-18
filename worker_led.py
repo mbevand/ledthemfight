@@ -248,6 +248,13 @@ def wait_next_frame():
     if s > 50e-6: # don't bother to sleep for less than 50 µsec
         time.sleep(s)
 
+def button_handlers(to_led_driver):
+    button = gpiozero.Button(23)
+    button.when_pressed = \
+        lambda : to_led_driver.put(['/button', ('effect', 'TurnOn')])
+    button.when_released = \
+        lambda : to_led_driver.put(['/button', ('effect', 'TurnOff')])
+
 def graceful_exit(signal_number, stack_frame):
     for st in strings:
         st.stop()
@@ -256,6 +263,7 @@ def graceful_exit(signal_number, stack_frame):
 def drive_led_forever(to_led_driver, to_web_server):
     global proc_name
     proc_name = 'led_driver'
+    #button_handlers(to_led_driver)
     # handle SIGTERM, the default signal sent by kill(1)
     signal.signal(signal.SIGTERM, graceful_exit)
     while True:
