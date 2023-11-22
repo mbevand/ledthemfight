@@ -17,6 +17,12 @@ def conf_push():
     to_led_driver.put(['/initial_setup', conf])
 
 class MyHandler(SimpleHTTPRequestHandler):
+    # set a short timeout since Python's http.server basic implementation
+    # is not threaded and only accepts 1 blocking client at a time
+    # (note: the timeout is implemented by StreamRequestHandler, parent
+    # of BaseHTTPRequestHandler, parent of SimpleHTTPRequestHandler)
+    timeout = 5
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory='www', **kwargs)
 
