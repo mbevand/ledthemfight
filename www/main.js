@@ -53,7 +53,12 @@ function initCanvasOne(index, canvas) {
     canvas.height = 1;
     name = canvas.id.substr(4);
     get("/sequence/" + name + ".bin", function() {
-        sequences[canvas.id] = { seq: new Uint8Array(this.response), frame: 0 };
+	if (this.status == 200)
+	    sequences[canvas.id] = { seq: new Uint8Array(this.response), frame: 0 };
+	else
+	    // the first time LED Them Fight is launched, it takes some time to generate
+	    // all the sequences, so we retry to fetch the sequence until it is available
+	    setTimeout(function() { initCanvasOne(index, canvas) }, 1000);
     }, true);
 }
 
