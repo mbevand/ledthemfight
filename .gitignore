@@ -1,3 +1,5 @@
 *.swp
 *.bin
 __pycache__
+_rpi_ws281x*.so
+rpi_ws281x*
