@@ -46,10 +46,10 @@ That is it for the hardware side. Now, for the software side, you need less than
 4. On the Pi, install LED Them Fight and its dependencies:
 
 ```
-$ sudo apt install python3-pip
-$ sudo pip3 install rpi-ws281x
+$ sudo apt install git python3-pip
 $ git clone https://github.com/mbevand/ledthemfight
 $ cd ledthemfight
+$ pip3 install -t . rpi-ws281x
 $ sudo ./ledthemfight.py
 ```
 
