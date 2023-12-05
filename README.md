@@ -31,7 +31,7 @@ But with LED Them Fight, all you need is a text editor to write effects in as fe
 
 # Quick Start Guide
 
-1. A [Raspberry Pi](https://www.raspberrypi.com/products/) computer is required. I recommend installing the [Raspberry Pi OS "Lite" version](https://www.raspberrypi.com/software/) without desktop. Or else, with the desktop version you may have to jump through hoops to disable audio device drivers as they [interfere with the rpi-ws281x library](https://github.com/jgarff/rpi_ws281x#limitations)
+1. A [Raspberry Pi](https://www.raspberrypi.com/products/) computer is required. **(2023-12-05: the Pi 5 is [currently](https://github.com/jgarff/rpi_ws281x/issues/528) unsupported.)** I recommend installing the [Raspberry Pi OS "Lite" version](https://www.raspberrypi.com/software/) without desktop. Or else, with the desktop version you may have to jump through hoops to disable audio device drivers as they [interfere with the rpi-ws281x library](https://github.com/jgarff/rpi_ws281x#limitations)
 
 2. Connect the Pi to the LED string:
    * GPIO18 (pin 12) to the LED data input line
