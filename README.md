@@ -287,7 +287,9 @@ led driver process gets it, loads the Rainbow.py module, and renders it on the L
 string. The `to_web_server` queue is only used so the led driver can report its
 status back to the web server.
 
-# Pixelblaze
+# Similar Software
+
+## Pixelblaze
 
 After I started LED Them Fight, and decided on implementing the concept of effect modules, I eventually discovered [Pixelblaze](https://electromage.com/pixelblaze) which implements the same concept, and is close to my ideal product. It is much more featureful, however:
 
@@ -299,3 +301,19 @@ After I started LED Them Fight, and decided on implementing the concept of effec
 * the visual quality of their [library of effects](https://electromage.com/patterns) is dubious—their single most popular effect "KITT" has non-smooth red gradients, their 3rd most popular effect "sparkfire" is weirdly grainy near the base, "fire - red" is inexplicalby dim, "policeLights" are red/purple instead of red/blue??, and so on
 
 It seems to me the Pixelblaze effect library is more curated for 2D LED arrays, not 1D LED strings.
+
+## led-control
+
+I recently stumbled upon [led-control](https://github.com/jackw01/led-control)
+which is very similar to LED Them Fight. It is Python based, more featureful,
+but has more software dependencies.
+
+I like the fact that in addition to being able to run on the Pi and having the
+LED string directly connected to a GPIO, just like LED Them Fight, it can also
+control a string connected to a Pi Pico that is itself connected to the Pi via
+a USB cable. The project provides a simple firmware for the Pico that exposes a
+USB virtual serial interface for relaying pixel data to the string. This means
+in theory led-control could be extended to support an arbitrary number of
+LED strings, with the help of an arbitrary number of Picos connected to the
+Pi's USB ports (potentially through a USB hub). Although as of March 2024,
+led-control does not allow this.
