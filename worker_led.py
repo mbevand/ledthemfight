@@ -75,7 +75,17 @@ def cto8b(color, ɣ=2.2):
         else:
             raise Exception(f'color is not in the format #rgb or #rrggbb: #{color}')
         color = tuple(r)
-    return [gamma(min(255, round(x * brightness)), ɣ) for x in color]
+    
+    # Add validation to ensure values don't cause IndexError in gamma lookup
+    result = []
+    for idx, x in enumerate(color):
+        val = min(255, round(x * brightness))
+        if val < 0 or val > 255:
+            raise ValueError(f'Color component {idx} out of range after brightness calculation: '
+                           f'{x} * {brightness} = {x * brightness}, clamped to {val}. '
+                           f'Original color: {color}')
+        result.append(gamma(val, ɣ))
+    return result
 
 def solid(strip, color):
     for i in range(strip.numPixels()):
@@ -327,7 +337,7 @@ def regenerate(mod_name):
         os.makedirs(seq_path, mode=0o777, exist_ok=True)
         write_bin(seq_path + '/' + mod_name + '.bin', num_pixels, n_sec, frames)
     except Exception:
-        err(f'exception:\n' +
+        err(f'exception in effect "{mod_name}":\n' +
             ''.join(traceback.format_exception(*sys.exc_info())))
 
 def seqgen_forever():
